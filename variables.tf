@@ -220,19 +220,30 @@ variable "lint" {
 
 variable "postrender" {
   description = "Configure a command to run after helm renders the manifest which can alter the manifest contents"
-  type        = any
-  default     = {}
+  type = object({
+    binary_path = string
+    args        = optional(list(string))
+  })
+  default     = null
 }
 
 variable "set" {
   description = "Value block with custom values to be merged with the values yaml"
-  type        = any
-  default     = []
+  type        = list(object({
+    name  = string
+    value = optional(string)
+    type  = optional(string)
+  }))
+  default = []
 }
 
 variable "set_sensitive" {
   description = "Value block with custom sensitive values to be merged with the values yaml that won't be exposed in the plan's diff"
-  type        = any
+  type        = list(object({
+    name  = string
+    value = string
+    type  = optional(string)
+  }))
   default     = []
 }
 
