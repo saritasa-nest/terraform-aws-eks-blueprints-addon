@@ -129,6 +129,37 @@ data "aws_iam_policy_document" "assume" {
       }
     }
   }
+
+  # Additional trust policy statements for extending trusted entities
+  # Allows custom principals (e.g., cross-account roles) to assume this role
+  dynamic "statement" {
+    for_each = var.additional_trust_policy_statements
+
+    content {
+      sid     = try(statement.value.sid, null)
+      effect  = try(statement.value.effect, "Allow")
+      actions = statement.value.actions
+
+      dynamic "principals" {
+        for_each = statement.value.principals
+
+        content {
+          type        = principals.value.type
+          identifiers = principals.value.identifiers
+        }
+      }
+
+      dynamic "condition" {
+        for_each = try(statement.value.conditions, [])
+
+        content {
+          test     = condition.value.test
+          variable = condition.value.variable
+          values   = condition.value.values
+        }
+      }
+    }
+  }
 }
 
 resource "aws_iam_role" "this" {

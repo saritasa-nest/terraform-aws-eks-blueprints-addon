@@ -323,6 +323,25 @@ variable "allow_self_assume_role" {
   default     = false
 }
 
+variable "additional_trust_policy_statements" {
+  description = "Additional trust policy statements to extend role's trusted entities beyond default OIDC providers"
+  type = list(object({
+    sid     = optional(string)
+    effect  = optional(string, "Allow")
+    actions = list(string)
+    principals = list(object({
+      type        = string
+      identifiers = list(string)
+    }))
+    conditions = optional(list(object({
+      test     = string
+      variable = string
+      values   = list(string)
+    })), [])
+  }))
+  default = []
+}
+
 ################################################################################
 # IAM Policy
 ################################################################################
