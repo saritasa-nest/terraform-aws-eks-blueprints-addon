@@ -136,7 +136,7 @@ data "aws_iam_policy_document" "assume" {
     for_each = var.additional_trust_policy_statements
 
     content {
-      sid     = try(statement.value.sid, null)
+      sid     = try(statement.value.sid, statement.key)
       effect  = try(statement.value.effect, "Allow")
       actions = statement.value.actions
 

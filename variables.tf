@@ -325,7 +325,7 @@ variable "allow_self_assume_role" {
 
 variable "additional_trust_policy_statements" {
   description = "Additional trust policy statements to extend role's trusted entities beyond default OIDC providers"
-  type = list(object({
+  type = map(object({
     sid     = optional(string)
     effect  = optional(string, "Allow")
     actions = list(string)
@@ -339,7 +339,7 @@ variable "additional_trust_policy_statements" {
       values   = list(string)
     })), [])
   }))
-  default = []
+  default = {}
 }
 
 ################################################################################
