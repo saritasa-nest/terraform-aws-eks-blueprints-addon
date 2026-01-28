@@ -324,7 +324,22 @@ variable "allow_self_assume_role" {
 }
 
 variable "additional_trust_policy_statements" {
-  description = "Additional trust policy statements to extend role's trusted entities beyond default OIDC providers"
+  description = <<-DOC
+    Additional trust policy statements to extend role's trusted entities beyond default OIDC providers.
+    
+    Example - Allow legacy ECS role to assume IRSA role:
+    ```
+    additional_trust_policy_statements = {
+      CrossAccountAccess = {
+        actions = ["sts:AssumeRole"]
+        principals = [{
+          type        = "AWS"
+          identifiers = [var.legacy_ecs_role_arn]
+        }]
+      }
+    }
+    ```
+  DOC
   type = map(object({
     sid     = optional(string)
     effect  = optional(string, "Allow")
